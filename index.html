@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Macronutrientes</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 40px; }
+        input, select, button { margin: 10px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Calculadora de Macronutrientes</h1>
+    <form id="formulario">
+        <input type="text" id="nombre" placeholder="Nombre" required>
+        <input type="email" id="correo" placeholder="Correo" required>
+        <input type="tel" id="telefono" placeholder="Teléfono" required>
+        <input type="number" id="peso" placeholder="Peso (kg)" required>
+        <input type="number" id="altura" placeholder="Altura (cm)" required>
+        <input type="number" id="edad" placeholder="Edad" required>
+        <select id="genero">
+            <option value="Masculino">Masculino</option>
+            <option value="Femenino">Femenino</option>
+        </select>
+        <select id="actividad">
+            <option value="Sedentario">Sedentario</option>
+            <option value="Ligero">Ligero</option>
+            <option value="Moderado">Moderado</option>
+            <option value="Activo">Activo</option>
+            <option value="Muy Activo">Muy Activo</option>
+        </select>
+        <select id="objetivo">
+            <option value="Perder Peso">Perder Peso</option>
+            <option value="Mantener Peso">Mantener Peso</option>
+            <option value="Ganar Músculo">Ganar Músculo</option>
+        </select>
+        <select id="dieta">
+            <option value="Balanceada">Balanceada</option>
+            <option value="Keto">Keto</option>
+            <option value="Low-Carb">Low-Carb</option>
+            <option value="Alta en Carbs">Alta en Carbs</option>
+        </select>
+        <button type="button" onclick="calcularMacronutrientes()">Calcular</button>
+    </form>
+    <h2>Resultados:</h2>
+    <p id="resultado"></p>
+
+    <script>
+        async function calcularMacronutrientes() {
+            const data = {
+                nombre: document.getElementById("nombre").value,
+                correo: document.getElementById("correo").value,
+                telefono: document.getElementById("telefono").value,
+                peso: parseFloat(document.getElementById("peso").value),
+                altura: parseFloat(document.getElementById("altura").value),
+                edad: parseInt(document.getElementById("edad").value),
+                genero: document.getElementById("genero").value,
+                actividad: document.getElementById("actividad").value,
+                objetivo: document.getElementById("objetivo").value,
+                dieta: document.getElementById("dieta").value
+            };
+            
+            const response = await fetch("http://127.0.0.1:8000/calcular", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            });
+            const resultado = await response.json();
+            document.getElementById("resultado").innerHTML = `
+                Calorías diarias: ${resultado.calorias} kcal<br>
+                Proteínas: ${resultado.proteinas}g<br>
+                Grasas: ${resultado.grasas}g<br>
+                Carbohidratos: ${resultado.carbohidratos}g
+            `;
+        }
+    </script>
+</body>
+</html>
